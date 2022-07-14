@@ -1,8 +1,9 @@
 server:
   port: 7002
-
 # 单机版
 eureka:
+  server:
+    enable-self-preservation: true
   instance:
     hostname: eureka7002.com  #eureka服务端的实例名字
   client:

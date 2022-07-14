@@ -3,6 +3,8 @@ server:
 
 # 单机版
 eureka:
+  server:
+    enable-self-preservation: true
   instance:
     hostname: eureka7001.com  #eureka服务端的实例名字
   client:

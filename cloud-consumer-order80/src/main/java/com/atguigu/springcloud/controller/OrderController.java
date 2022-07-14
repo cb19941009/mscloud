@@ -4,9 +4,7 @@ import com.atguigu.springcloud.entities.CommonResult;
 import com.atguigu.springcloud.entities.Payment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -15,7 +13,7 @@ import javax.annotation.Resource;
 @Slf4j
 public class OrderController
 {
-    private static String url = "http://localhost:8001";
+    private static String url = "http://cloud-payment-service";
     @Resource
     private RestTemplate restTemplate;
 
@@ -27,5 +25,9 @@ public class OrderController
     @PostMapping("create")
     public CommonResult<Payment> create(@RequestBody Payment payment){
         return restTemplate.postForObject(url + "/payment/create",payment,CommonResult.class);
+    }
+    @GetMapping("get/{id}")
+    public CommonResult<Payment> get(@PathVariable("id") String id){
+        return restTemplate.getForObject(url + "/payment/get/"+id,CommonResult.class);
     }
 }
