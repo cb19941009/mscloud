@@ -3,7 +3,11 @@ package com.atguigu.springcloud.controller;
 import com.atguigu.springcloud.entities.CommonResult;
 import com.atguigu.springcloud.entities.Payment;
 import com.atguigu.springcloud.service.PaymentService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -16,6 +20,7 @@ import java.util.List;
  * @date 2022/01/13 16:05
  */
 @RestController
+@Slf4j
 @RequestMapping("payment")
 public class PaymentController {
     /**
@@ -26,6 +31,8 @@ public class PaymentController {
 
     @Value("${server.port}")
     private String serverPort;
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
 
 
@@ -63,7 +70,19 @@ public class PaymentController {
         return serverPort;
     }
 
-
-
+    @GetMapping("getService")
+    public Object getService(){
+        List<String> services = discoveryClient.getServices();
+        for (String service:services) {
+            log.info("[{}]",service);
+            List<ServiceInstance> instances = discoveryClient.getInstances(service);
+            for (ServiceInstance serviceInstance : instances){
+                log.info("host:[{}]",serviceInstance.getHost());
+                log.info("端口号:[{}]",serviceInstance.getPort());
+                log.info("路径:[{}]",serviceInstance.getUri());
+            }
+        }
+        return this.discoveryClient;
+    }
 
 }
